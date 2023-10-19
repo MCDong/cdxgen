@@ -1485,7 +1485,8 @@ export const createJavaBom = async (path, options) => {
         const sresult = spawnSync(gradleCmd, gradleDepArgs, {
           cwd: path,
           encoding: "utf-8",
-          timeout: TIMEOUT_MS
+          timeout: TIMEOUT_MS,
+          maxBuffer: 50 * 1024 * 1024
         });
         if (sresult.status !== 0 || sresult.error) {
           if (options.failOnError || DEBUG_MODE) {
@@ -2645,7 +2646,12 @@ export const createGoBom = async (path, options) => {
       const mresult = spawnSync(
         "go",
         ["mod", "why", "-m", "-vendor", pkgFullName],
-        { cwd: path, encoding: "utf-8", timeout: TIMEOUT_MS }
+        {
+          cwd: path,
+          encoding: "utf-8",
+          timeout: TIMEOUT_MS,
+          maxBuffer: 50 * 1024 * 1024
+        }
       );
       if (mresult.status !== 0 || mresult.error) {
         if (DEBUG_MODE) {
@@ -2734,7 +2740,12 @@ export const createGoBom = async (path, options) => {
             "'{{with .Module}}{{.Path}} {{.Version}} {{.Indirect}} {{.GoMod}} {{.GoVersion}} {{.Main}}{{end}}'",
             "./..."
           ],
-          { cwd: basePath, encoding: "utf-8", timeout: TIMEOUT_MS }
+          {
+            cwd: basePath,
+            encoding: "utf-8",
+            timeout: TIMEOUT_MS,
+            maxBuffer: 50 * 1024 * 1024
+          }
         );
         if (DEBUG_MODE) {
           console.log("Executing go mod graph in", basePath);
@@ -2768,7 +2779,8 @@ export const createGoBom = async (path, options) => {
           result = spawnSync("go", ["mod", "graph"], {
             cwd: basePath,
             encoding: "utf-8",
-            timeout: TIMEOUT_MS
+            timeout: TIMEOUT_MS,
+            maxBuffer: 50 * 1024 * 1024
           });
           // Check if got a mod graph successfully
           if (result.status !== 0 || result.error) {
@@ -3156,7 +3168,8 @@ export const createClojureBom = (path, options) => {
       const result = spawnSync(LEIN_CMD, LEIN_ARGS, {
         cwd: basePath,
         encoding: "utf-8",
-        timeout: TIMEOUT_MS
+        timeout: TIMEOUT_MS,
+        maxBuffer: 50 * 1024 * 1024
       });
       if (result.status !== 0 || result.error) {
         if (result.stderr) {
@@ -3203,7 +3216,8 @@ export const createClojureBom = (path, options) => {
       const result = spawnSync(CLJ_CMD, CLJ_ARGS, {
         cwd: basePath,
         encoding: "utf-8",
-        timeout: TIMEOUT_MS
+        timeout: TIMEOUT_MS,
+        maxBuffer: 50 * 1024 * 1024
       });
       if (result.status !== 0 || result.error) {
         if (result.stderr) {
@@ -3550,7 +3564,8 @@ export const createSwiftBom = (path, options) => {
         {
           cwd: basePath,
           encoding: "utf-8",
-          timeout: TIMEOUT_MS
+          timeout: TIMEOUT_MS,
+          maxBuffer: 50 * 1024 * 1024
         }
       );
       if (result.status === 0 && result.stdout) {
